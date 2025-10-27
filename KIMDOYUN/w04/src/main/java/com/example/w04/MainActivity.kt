@@ -1,3 +1,4 @@
+
 package com.example.w4
 
 import android.os.Bundle
@@ -26,18 +27,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.w4.ui.theme.Compose_202511016Theme
+import com.example.w04.ui.theme.KIMDOYUNTheme
 
-
-private val Unit.body: Any
 private val Unit.author: Any
+private val Unit.body: Any
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Compose_202511016Theme {
+            KIMDOYUNTheme {
                 @Composable
                 fun ProfileCard() {
                     // 표시할 메시지 데이터를 생성합니다.
@@ -83,17 +83,12 @@ class MainActivity : ComponentActivity() {
 
 
 
-                    }
-                }
-                    
-                }
+            }
+        }
+
+    }
 
     private fun Message(string: String, string2: String) {
         TODO("Not yet implemented")
     }
 }
-
-
-
-
-

@@ -22,3 +22,7 @@ dependencyResolutionManagement {
 rootProject.name = "KIMDOYUN"
 include(":app")
 include(":w05")
+include(":w03")
+include(":w04")
+include(":w06")
+include(":w03:w03")
