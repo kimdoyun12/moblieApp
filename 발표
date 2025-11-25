@@ -1,0 +1,152 @@
+package com.example.kimdoyun
+
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.os.Build
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import com.example.kimdoyun.ui.theme.KimDoYunTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            KimDoYunTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    DeviceInfoScreenWithFeatures(
+                        context = this,
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DeviceInfoScreenWithFeatures(context: Context, modifier: Modifier = Modifier) {
+    // Android 기기 정보
+    val manufacturer = Build.MANUFACTURER
+    val model = Build.MODEL
+    val androidVersion = Build.VERSION.RELEASE
+
+    // iPhone 모델 선택 기능
+    val iPhoneModels = listOf("iPhone 15", "iPhone 16", "iPhone 17")
+    var selectediPhone by remember { mutableStateOf(iPhoneModels.last()) }
+    var iPhoneOSVersion by remember { mutableStateOf("iOS 17.0") }
+
+    // 드롭다운 상태
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // Android 정보
+        Text(text = "=== Android 기기 정보 ===", style = MaterialTheme.typography.titleMedium)
+        Text(text = "제조사: $manufacturer")
+        Text(text = "모델: $model")
+        Text(text = "Android 버전: $androidVersion")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // iPhone 정보
+        Text(text = "=== iPhone 예시 정보 ===", style = MaterialTheme.typography.titleMedium)
+        Text(text = "모델: $selectediPhone")
+        Text(text = "iOS 버전: $iPhoneOSVersion")
+
+        // iPhone 모델 선택 드롭다운
+        Box {
+            Button(onClick = { expanded = true }) {
+                Text("iPhone 모델 선택")
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                iPhoneModels.forEach { model ->
+                    DropdownMenuItem(
+                        text = { Text(model) },
+                        onClick = {
+                            selectediPhone = model
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 기능 설명
+        Text(text = "기능:", style = MaterialTheme.typography.titleMedium)
+        Text(text = "- Android 및 iPhone 기기 정보 확인")
+        Text(text = "- iPhone 모델 선택 가능")
+        Text(text = "- 기기 정보 복사 가능")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 기기 정보 복사 버튼
+        Button(onClick = {
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText(
+                "Device Info",
+                "Android: $manufacturer $model $androidVersion\n" +
+                        "iPhone: $selectediPhone $iPhoneOSVersion"
+            )
+            clipboard.setPrimaryClip(clip)
+        }) {
+            Text("기기 정보 복사")
+        }
+    }
+}
+
+// Preview용 UI (context 없이 동작)
+@Preview(showBackground = true)
+@Composable
+fun DeviceInfoPreview() {
+    KimDoYunTheme {
+        DeviceInfoPreviewContent()
+    }
+}
+
+@Composable
+fun DeviceInfoPreviewContent() {
+    val manufacturer = "Google"
+    val model = "Pixel 7"
+    val androidVersion = "13"
+
+    val selectediPhone = "iPhone 17"
+    val iPhoneOSVersion = "iOS 17.0"
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(text = "=== Android 기기 정보 ===")
+        Text(text = "제조사: $manufacturer")
+        Text(text = "모델: $model")
+        Text(text = "Android 버전: $androidVersion")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(text = "=== iPhone 예시 정보 ===")
+        Text(text = "모델: $selectediPhone")
+        Text(text = "iOS 버전: $iPhoneOSVersion")
+    }
+}
